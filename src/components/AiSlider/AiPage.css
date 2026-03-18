@@ -1,0 +1,156 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
+
+.ai-experience-section {
+  padding: 80px 40px;
+  background: #0f172a;
+  font-family: 'Outfit', sans-serif;
+  overflow: hidden;
+  position: relative;
+}
+
+.ai-slider-graphics {
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.ai-head-premium {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.ai-badge-neon {
+  background: rgba(99, 102, 241, 0.2);
+  color: #818cf8;
+  padding: 8px 18px;
+  border-radius: 100px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border: 1px solid rgba(129, 140, 248, 0.3);
+}
+
+.ai-title-glow {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: white;
+  margin-top: 20px;
+  letter-spacing: -1.5px;
+  text-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
+}
+
+.ai-slider-wrapper {
+  height: 500px;
+  position: relative;
+  border-radius: 40px;
+  overflow: hidden;
+  box-shadow: 0 40px 80px -20px rgba(0,0,0,0.5);
+}
+
+.ai-slide-modern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.ai-slide-modern.active {
+  opacity: 1;
+}
+
+.ai-visual-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.ai-img-parallax {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.7) contrast(1.1);
+}
+
+.ai-overlay-sci-fi {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, transparent, rgba(15, 23, 42, 0.9));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 40px;
+}
+
+.ai-slide-info h2 {
+  font-size: 3rem;
+  color: white;
+  font-weight: 800;
+  margin-bottom: 30px;
+  max-width: 800px;
+  animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.ai-btn-premium {
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  color: white;
+  padding: 16px 35px;
+  border-radius: 16px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+}
+
+.ai-btn-premium:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 20px 40px rgba(99, 102, 241, 0.6);
+}
+
+.ai-slider-dots {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+
+.ai-dot {
+  width: 8px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ai-dot.active {
+  background: #6366f1;
+  width: 24px;
+  border-radius: 100px;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .ai-slider-wrapper { height: 400px; }
+  .ai-slide-info h2 { font-size: 2rem; }
+  .ai-title-glow { font-size: 2.5rem; }
+}

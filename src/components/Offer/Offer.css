@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap');
+
+/* === MODERN OFFER MARQUEE STRIP === */
+.offer-marquee-wrap {
+  width: 100%;
+  overflow: hidden;
+  background: linear-gradient(90deg, #f43f5e 0%, #8b5cf6 40%, #06b6d4 100%);
+  padding: 0;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 5;
+  box-shadow: 0 4px 24px rgba(244, 63, 94, 0.3);
+}
+
+.offer-marquee-track {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  white-space: nowrap;
+  animation: marquee-scroll 28s linear infinite;
+  width: max-content;
+}
+
+.offer-marquee-track:hover {
+  animation-play-state: paused;
+}
+
+.offer-marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 24px;
+  color: #fff;
+  font-family: 'Outfit', sans-serif;
+}
+
+.offer-icon {
+  font-size: 1rem;
+  color: #ffe066;
+  flex-shrink: 0;
+}
+
+.offer-text {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: #fff;
+}
+
+.offer-code-pill {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 3px 12px;
+  border-radius: 100px;
+  border: 1px solid rgba(255,255,255,0.35);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.offer-divider {
+  font-size: 1.2rem;
+  color: rgba(255,255,255,0.35);
+  margin-left: 12px;
+}
+
+@keyframes marquee-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@media (max-width: 600px) {
+  .offer-marquee-wrap {
+    height: 50px;
+  }
+  .offer-text {
+    font-size: 0.85rem;
+  }
+  .offer-code-pill {
+    display: none;
+  }
+}

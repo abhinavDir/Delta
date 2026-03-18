@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
+
+.announcement-section {
+  padding: 80px 40px;
+  background: white;
+  font-family: 'Outfit', sans-serif;
+  text-align: center;
+}
+
+.bulletin-head {
+  margin-bottom: 50px;
+}
+
+.anniversary-badge {
+  background: #fefce8;
+  color: #854d0e;
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  border: 1px solid #fef08a;
+  text-transform: uppercase;
+}
+
+.announcement-title-modern {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-top: 15px;
+  letter-spacing: -1px;
+}
+
+.bulletin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.bulletin-card-premium {
+  background: #f8fafc;
+  border-radius: 35px;
+  height: 400px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.bulletin-card-premium:hover {
+  transform: translateY(-15px) scale(1.02);
+  box-shadow: 0 30px 60px -15px rgba(15, 23, 42, 0.15);
+}
+
+.bulletin-img-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.bulletin-img-premium {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s ease;
+}
+
+.bulletin-card-premium:hover .bulletin-img-premium {
+  transform: scale(1.15);
+}
+
+.bulletin-overlay-premium {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, rgba(15, 23, 42, 0.95), transparent 70%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 35px;
+  color: white;
+  text-align: left;
+}
+
+.bulletin-date {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #818cf8;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.bulletin-card-premium h3 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin: 0;
+  line-height: 1.2;
+}
+
+@media (max-width: 768px) {
+  .announcement-title-modern { font-size: 2.22rem; }
+  .bulletin-card-premium { height: 320px; }
+}

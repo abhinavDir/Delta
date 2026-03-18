@@ -1,0 +1,11 @@
+/* Specific overrides for Search page if needed */
+.mp-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.search-footer-info {
+  padding-bottom: 50px;
+}

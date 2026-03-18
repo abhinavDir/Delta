@@ -1,0 +1,158 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
+
+.featured-section-modern {
+  padding: 100px 40px;
+  background: white;
+  font-family: 'Outfit', sans-serif;
+  text-align: center;
+}
+
+.featured-badge-glow {
+  background: rgba(249, 115, 22, 0.1);
+  color: #f97316;
+  padding: 8px 18px;
+  border-radius: 100px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.featured-title-main {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 20px 0 60px;
+  letter-spacing: -1.5px;
+}
+
+.featured-dish-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 40px;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.dish-card-premium {
+  background: #f8fafc;
+  border-radius: 40px;
+  padding: 15px;
+  position: relative;
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 1px solid #f1f5f9;
+  text-align: left;
+}
+
+.dish-card-premium:hover {
+  transform: translateY(-20px);
+  background: white;
+  box-shadow: 0 40px 80px -20px rgba(249, 115, 22, 0.15);
+  border-color: #f97316;
+}
+
+.dish-img-wrapper {
+  width: 100%;
+  height: 250px;
+  border-radius: 30px;
+  overflow: hidden;
+  position: relative;
+}
+
+.dish-img-premium {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.dish-card-premium:hover .dish-img-premium {
+  transform: scale(1.1);
+}
+
+.dish-tag-premium {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: #f97316;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  box-shadow: 0 5px 15px rgba(249, 115, 22, 0.4);
+}
+
+.dish-info-premium {
+  padding: 25px 15px 15px;
+}
+
+.dish-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.dish-header-row h3 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 0;
+}
+
+.dish-price-big {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #f97316;
+}
+
+.dish-desc-muted {
+  font-size: 0.95rem;
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.dish-action-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rating-pill-modern {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: white;
+  padding: 6px 12px;
+  border-radius: 100px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ca8a04;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+}
+
+.add-dish-btn {
+  width: 45px;
+  height: 45px;
+  background: #1e293b;
+  color: white;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.dish-card-premium:hover .add-dish-btn {
+  background: #f97316;
+  transform: rotate(90deg);
+}
+
+@media (max-width: 768px) {
+  .featured-title-main { font-size: 2.5rem; }
+  .dish-card-premium { border-radius: 30px; }
+}

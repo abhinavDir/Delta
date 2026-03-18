@@ -1,0 +1,108 @@
+.salert-container {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  min-width: 300px;
+  max-width: 450px;
+  padding: 16px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 9999;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transform: translateX(120%);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.salert-container.active {
+  transform: translateX(0);
+}
+
+.salert-container.info {
+  background: rgba(99, 102, 241, 0.15);
+  border-left: 4px solid #6366f1;
+}
+
+.salert-container.success {
+  background: rgba(34, 197, 94, 0.15);
+  border-left: 4px solid #22c55e;
+}
+
+.salert-container.error {
+  background: rgba(239, 68, 68, 0.15);
+  border-left: 4px solid #ef4444;
+}
+
+.salert-container.warning {
+  background: rgba(245, 158, 11, 0.15);
+  border-left: 4px solid #f59e0b;
+}
+
+.salert-icon {
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.info .salert-icon { color: #6366f1; }
+.success .salert-icon { color: #22c55e; }
+.error .salert-icon { color: #ef4444; }
+.warning .salert-icon { color: #f59e0b; }
+
+.salert-content {
+  flex: 1;
+}
+
+.salert-content p {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: #1e293b;
+  line-height: 1.4;
+}
+
+.salert-close {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  color: #64748b;
+  transition: color 0.2s;
+}
+
+.salert-close:hover {
+  color: #1e293b;
+}
+
+.salert-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: currentColor;
+  opacity: 0.3;
+  width: 100%;
+  border-radius: 0 0 0 16px;
+  animation: salertProgress 4s linear forwards;
+}
+
+@keyframes salertProgress {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+@media (max-width: 480px) {
+  .salert-container {
+    top: auto;
+    bottom: 80px; /* Above mobile bottom nav */
+    right: 16px;
+    left: 16px;
+    min-width: auto;
+  }
+}

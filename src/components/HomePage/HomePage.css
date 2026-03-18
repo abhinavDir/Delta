@@ -1,0 +1,21 @@
+.home-page {
+  width: 100%;
+  max-width: 1200px; /* keep centered on large screens */
+  margin: 0 auto;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+/* space between sections */
+.home-page > * {
+  margin-bottom: 24px;
+}
+
+@media (max-width: 768px) {
+  .home-page {
+    padding: 0 12px;
+  }
+  .home-page > * {
+    margin-bottom: 18px;
+  }
+}

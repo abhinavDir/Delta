@@ -1,0 +1,218 @@
+.skeleton{
+  background: linear-gradient(
+    90deg,
+    #f1f5f9 25%,
+    #e2e8f0 37%,
+    #f1f5f9 63%
+  );
+  background-size: 400% 100%;
+  animation: skeletonLoading 1.4s ease infinite;
+  border-radius: 12px;
+}
+
+@keyframes skeletonLoading{
+  0%{ background-position:100% 50%;}
+  100%{ background-position:0 50%;}
+}
+
+/* PAGE LAYOUT */
+
+.skeleton-page{
+  padding:40px;
+}
+
+.skeleton-navbar{
+  height:70px;
+  margin-bottom:40px;
+}
+
+.skeleton-hero{
+  height:250px;
+  margin-bottom:40px;
+}
+
+.skeleton-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:20px;
+}
+
+.skeleton-card{
+  height:220px;
+}
+/* ===============================
+   GLOBAL SKELETON BASE
+================================ */
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: #e5e7eb;
+  border-radius: 12px;
+}
+
+/* SHIMMER ANIMATION */
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150px;
+  height: 100%;
+  width: 150px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.6),
+    transparent
+  );
+
+  animation: shimmer 1.2s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(300px);
+  }
+}
+
+/* ===============================
+   PAGE LAYOUT
+================================ */
+
+.skeleton-page {
+  padding: 30px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* ===============================
+   NAVBAR
+================================ */
+
+.skeleton-navbar {
+  height: 70px;
+  width: 100%;
+  margin-bottom: 30px;
+  border-radius: 16px;
+}
+
+/* ===============================
+   HERO / SLIDER
+================================ */
+
+.skeleton-hero {
+  height: 280px;
+  width: 100%;
+  border-radius: 20px;
+  margin-bottom: 40px;
+}
+
+/* ===============================
+   FOOD CARD GRID
+================================ */
+
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px,1fr));
+  gap: 25px;
+}
+
+/* ===============================
+   FOOD CARD
+================================ */
+
+.skeleton-card {
+  height: 260px;
+  border-radius: 18px;
+}
+
+/* ===============================
+   MENU LIST
+================================ */
+
+.skeleton-menu-item {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.skeleton-food-img {
+  width: 90px;
+  height: 90px;
+  border-radius: 12px;
+}
+
+.skeleton-food-info {
+  flex: 1;
+}
+
+.skeleton-food-title {
+  height: 18px;
+  width: 60%;
+  margin-bottom: 10px;
+}
+
+.skeleton-food-price {
+  height: 16px;
+  width: 40%;
+}
+
+/* ===============================
+   CART ITEM
+================================ */
+
+.skeleton-cart-item {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.skeleton-cart-img {
+  width: 70px;
+  height: 70px;
+  border-radius: 10px;
+}
+
+.skeleton-cart-text {
+  flex: 1;
+}
+
+.skeleton-cart-title {
+  height: 16px;
+  width: 70%;
+  margin-bottom: 8px;
+}
+
+.skeleton-cart-price {
+  height: 14px;
+  width: 40%;
+}
+
+/* ===============================
+   ORDER TRACKING
+================================ */
+
+.skeleton-order-card {
+  height: 200px;
+  border-radius: 20px;
+  margin-bottom: 25px;
+}
+
+/* ===============================
+   MOBILE RESPONSIVE
+================================ */
+
+@media (max-width:768px){
+
+  .skeleton-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .skeleton-hero{
+    height:200px;
+  }
+
+}
