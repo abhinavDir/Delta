@@ -112,15 +112,7 @@ function Nav({ cartItems, user, setUser }) {
               </button>
             )}
 
-            {user && (
-              <button
-                onClick={handleLogout}
-                className="logout-btn"
-                title="Logout"
-              >
-                <FiLogOut />
-              </button>
-            )}
+            {/* Logout moved to UserPage */}
 
             <Link to="/cart" className="cart-btn">
               <FiShoppingCart />

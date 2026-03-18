@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../../firebase";
@@ -10,6 +10,19 @@ function Login({ setUser }) {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const { showSalert } = useSalert();
+  const [userState] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("currentUser"));
+    } catch {
+      return null;
+    }
+  });
+
+  useEffect(() => {
+    if (userState) {
+      navigate("/");
+    }
+  }, [userState, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();

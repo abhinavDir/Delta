@@ -9,6 +9,8 @@ import "./Food.css";
 
 /* ---------- Helpers ---------- */
 export const getSellerName = (item) => {
+  if (item.canteen) return item.canteen;
+  if (item.adminId && item.adminId !== 'admin') return item.adminId;
   if (item.realSellerName) return item.realSellerName;
   if (item.adminName && item.adminName !== 'admin') return item.adminName;
   if (item.sellerName) return item.sellerName;
@@ -85,10 +87,6 @@ export function SellerRow({ seller, items, onOpen, addToCart }) {
         <h3 className="mp-seller-title">
           <span className="mp-seller-icon">🏪</span> {seller}
         </h3>
-        <div className="mp-slider-buttons">
-          <button className="mp-scroll-btn" onClick={() => scroll(-1)}><FaChevronLeft /></button>
-          <button className="mp-scroll-btn" onClick={() => scroll(1)}><FaChevronRight /></button>
-        </div>
       </div>
       <div className="mp-horizontal-scroll" ref={sliderRef}>
         {items.map((item) => (
@@ -112,10 +110,6 @@ export function CategoryRow({ category, items, onOpen, addToCart }) {
         <h3 className="mp-seller-title">
           <span className="mp-seller-icon">🍽️</span> {category}
         </h3>
-        <div className="mp-slider-buttons">
-          <button className="mp-scroll-btn" onClick={() => scroll(-1)}><FaChevronLeft /></button>
-          <button className="mp-scroll-btn" onClick={() => scroll(1)}><FaChevronRight /></button>
-        </div>
       </div>
       <div className="mp-horizontal-scroll" ref={sliderRef}>
         {items.map((item) => (
@@ -215,7 +209,7 @@ const CATEGORIES_DATA = [
   { id: "snacks", name: "Snacks", icon: "🍿" },
 ];
 
-const FoodGallery1 = ({ addToCart, cartItems = [], category: categoryProp }) => {
+const FoodGallery1 = ({ products: productsProp, addToCart, cartItems = [], category: categoryProp }) => {
   const { category: categoryParam } = useParams();
   const navigate = useNavigate();
   const [grouped, setGrouped] = useState({});
@@ -232,6 +226,20 @@ const FoodGallery1 = ({ addToCart, cartItems = [], category: categoryProp }) => 
   }, [categoryParam]);
 
   useEffect(() => {
+    if (productsProp && productsProp.length > 0) {
+      let data = [...productsProp];
+      data = data.filter((i) => i.isActive !== false);
+
+      const selected = activeCategory.toLowerCase();
+      if (selected !== "all") {
+        data = data.filter((i) => i.category?.toLowerCase() === selected);
+      }
+
+      setGrouped(groupBySeller(data));
+      setLoading(false);
+      return;
+    }
+
     const unsub = onSnapshot(collection(db, "products"), (snap) => {
       let data = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
@@ -246,7 +254,7 @@ const FoodGallery1 = ({ addToCart, cartItems = [], category: categoryProp }) => 
       setLoading(false);
     });
     return () => unsub();
-  }, [activeCategory]);
+  }, [activeCategory, productsProp]);
 
   return (
     <div className="marketplace-page">
@@ -260,7 +268,7 @@ const FoodGallery1 = ({ addToCart, cartItems = [], category: categoryProp }) => 
             </div>
             <Link to="/cart" className="mp-cart-trigger">
               <FiShoppingCart />
-              <span className="mp-cart-badge">{cartItems.length}</span>
+              <span className="mp-cart-badge">{cartItems.reduce((acc, i) => acc + (i.qty || 1), 0)}</span>
             </Link>
           </div>
           

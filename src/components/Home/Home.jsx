@@ -60,11 +60,11 @@ function Home() {
             <div className="floating-card thali-card card-animate">
               <img src={ThaliImg} alt="Thali" className="card-thumb" />
               <div className="card-info">
-                <span className="info-title">Indian Thali</span>
+                {/* <span className="info-title">Indian Thali</span>
                 <div className="info-rating">
                   <FiStar /> <FiStar /> <FiStar /> <FiStar /> <FiStar />
-                </div>
-                <span className="info-price">₹200</span>
+                </div> */}
+                {/* <span className="info-price">₹200</span> */}
               </div>
             </div>
 
@@ -86,7 +86,7 @@ function Home() {
               <div className="icon-circle free-bg">
                 <FaShoppingBag />
               </div>
-              <span>Free Shipping</span>
+              <span>Shipping</span>
             </div>
 
             <div className="time-badge card-animate">

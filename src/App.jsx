@@ -21,15 +21,22 @@ const getSellerName = (item) => {
   return "Unknown Seller";
 };
 
-/* COMPONENTS */
+/* PROTECTED ROUTE */
+function ProtectedRoute({ user, children }) {
+  const location = useLocation();
+  if (!user) {
+    return <Navigate to="/login" replace state={{ from: location }} />;
+  }
+  return children;
+}
 
+/* COMPONENTS */
 import Nav from "./components/Navbar/Nav";
 import ImageSlider from "./components/Home/Home";
 import Categories from "./components/Category/CategoryItem";
 import Offer from "./components/Offer/Offer";
 import SellerMenu from "./components/FoodItem/SellerMenu";
 import GifExample from "./components/Page/Page";
-
 import AiSlider from "./components/AiSlider/AiPage";
 import About from "./components/About/About";
 import MiniCategories from "./components/Category/MiniCategories";
@@ -50,19 +57,16 @@ import Signup from "./components/Login/Signup";
 import PageLoader from "./components/Loader/PageLoader";
 
 /* FIREBASE */
-
 import { collection, onSnapshot, addDoc } from "firebase/firestore";
 import { db } from "./firebase";
+
 import AIChatPage from "./components/AiChat/AiChat";
 import { SalertProvider, useSalert } from "./components/Salert/Salert";
-
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
-
   const navigate = useNavigate();
   const location = useLocation();
-
-  /* NAV VISIBILITY */
 
   const showStandardNav =
     location.pathname !== "/login" &&
@@ -70,24 +74,42 @@ function App() {
     location.pathname !== "/AdminLogin" &&
     location.pathname !== "/AdminSignup";
 
-  /* STATE */
-
-  const [user, setUser] = useState(
-    JSON.parse(localStorage.getItem("currentUser")) || null
-  );
+  const [user, setUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem("currentUser");
+      return saved ? JSON.parse(saved) : null;
+    } catch (e) {
+      console.error("User init error:", e);
+      return null;
+    }
+  });
 
   const [admin, setAdmin] = useState(
     localStorage.getItem("isAdmin") === "true"
   );
 
   const [orders, setOrders] = useState([]);
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState(() => {
+    try {
+      const userJson = localStorage.getItem("currentUser");
+      if (userJson) {
+        const u = JSON.parse(userJson);
+        if (u.uid) {
+          const stored = localStorage.getItem(`cart_items_${u.uid}`);
+          return stored ? JSON.parse(stored) : [];
+        }
+      }
+    } catch (e) {
+      console.error("Cart init error:", e);
+    }
+    return [];
+  });
   const [products, setProducts] = useState([]);
   const [admins, setAdmins] = useState([]);
-  
+
   const { showSalert } = useSalert();
 
-  /* SYNC ADMINS (For real canteen names) */
+  /* ADMIN SYNC */
   useEffect(() => {
     const unsub = onSnapshot(collection(db, "admins"), (snap) => {
       setAdmins(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
@@ -95,17 +117,16 @@ function App() {
     return () => unsub();
   }, []);
 
-  /* SYNC PRODUCTS */
+  /* PRODUCT SYNC */
   useEffect(() => {
     const unsub = onSnapshot(collection(db, "products"), (snap) => {
       const prodData = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      
-      // Enrich with real seller name
+
       const enriched = prodData.map(p => {
         const adminDoc = admins.find(a => a.id === p.adminId || a.id === p.hotelId);
         return {
           ...p,
-          realSellerName: adminDoc ? (adminDoc.canteen || adminDoc.name) : null
+          realSellerName: adminDoc ? (adminDoc.canteen || adminDoc.id || adminDoc.name) : null
         };
       });
 
@@ -114,7 +135,7 @@ function App() {
     return () => unsub();
   }, [admins]);
 
-  /* REACTIVE CART STOCK SYNC */
+  /* CART STOCK SYNC */
   useEffect(() => {
     if (products.length === 0 || cartItems.length === 0) return;
 
@@ -132,7 +153,7 @@ function App() {
     });
   }, [products]);
 
-  /* LOAD CART ON USER CHANGE */
+  /* LOAD CART */
   useEffect(() => {
     if (user && user.uid) {
       const key = `cart_items_${user.uid}`;
@@ -143,7 +164,7 @@ function App() {
     }
   }, [user]);
 
-  /* SYNC CART TO STORAGE */
+  /* SAVE CART */
   useEffect(() => {
     if (user && user.uid) {
       const key = `cart_items_${user.uid}`;
@@ -151,78 +172,80 @@ function App() {
     }
   }, [cartItems, user]);
 
-  /* CART ACTIONS */
-
+  /* ADD TO CART */
   const addToCart = (item, qtyToAdd = 1) => {
+
+    if (!user) {
+      showSalert("Please login first to add items", "warning");
+      navigate("/login");
+      return;
+    }
+
     setCartItems((prev) => {
-      // 1. Single Seller Rule
       if (prev.length > 0) {
         const currentSeller = getSellerName(prev[0]);
         const newItemSeller = getSellerName(item);
-        
+
         if (currentSeller !== newItemSeller) {
-          showSalert(`You can only order from one seller at a time. Current: ${currentSeller}. Please clear your cart first.`, "warning");
+          showSalert(`Only one seller allowed: ${currentSeller}`, "warning");
           return prev;
         }
       }
 
       const existing = prev.find((i) => i.id === item.id);
-      
-      // Stock Check (Latest from global state)
       const freshProduct = products.find(p => p.id === item.id) || item;
-      const availableStock = Number(freshProduct.quantity) || 0;
-      const currentQtyInCart = existing ? (existing.qty || 0) : 0;
+      const stock = Number(freshProduct.quantity) || 0;
+      const currentQty = existing ? existing.qty || 0 : 0;
 
-      if (currentQtyInCart + qtyToAdd > availableStock) {
-        showSalert(`Only ${availableStock} units available in stock.`, "warning");
+      if (currentQty + qtyToAdd > stock) {
+        showSalert(`Only ${stock} available`, "warning");
         return prev;
       }
 
-      showSalert(`${item.name} added to cart! 🛒`, "success");
+      showSalert(`${item.name} added 🛒`, "success");
 
       if (existing) {
         return prev.map((i) =>
-          i.id === item.id ? { ...i, qty: (i.qty || 0) + qtyToAdd, quantity: availableStock } : i
+          i.id === item.id
+            ? { ...i, qty: (i.qty || 0) + qtyToAdd, quantity: stock }
+            : i
         );
       }
-      return [...prev, { ...item, qty: qtyToAdd, quantity: availableStock }];
+
+      return [...prev, { ...item, qty: qtyToAdd, quantity: stock }];
     });
   };
 
   const removeFromCart = (id) => {
-    setCartItems((prev) => prev.filter((i) => i.id !== id));
+    setCartItems(prev => prev.filter(i => i.id !== id));
   };
 
   const updateQty = (id, delta) => {
-    setCartItems((prev) =>
-      prev.map((i) => {
+    setCartItems(prev =>
+      prev.map(i => {
         if (i.id === id) {
-          const freshProduct = products.find(p => p.id === id) || i;
-          const availableStock = Number(freshProduct.quantity) || 0;
+          const fresh = products.find(p => p.id === id) || i;
+          const stock = Number(fresh.quantity) || 0;
           const newQty = Math.max(1, (i.qty || 1) + delta);
 
-          if (delta > 0 && newQty > availableStock) {
-            showSalert(`Limit reached: ${availableStock} units available.`, "warning");
-            return { ...i, quantity: availableStock };
+          if (delta > 0 && newQty > stock) {
+            showSalert(`Max ${stock}`, "warning");
+            return i;
           }
-          return { ...i, qty: newQty, quantity: availableStock };
+
+          return { ...i, qty: newQty };
         }
         return i;
       })
     );
   };
 
-  const clearCart = () => {
-    setCartItems([]);
-  };
+  const clearCart = () => setCartItems([]);
 
   /* PLACE ORDER */
-
-  /* PLACE ORDER */
-
   const placeOrder = async (mobile, paymentMethod, adminId, splitItems = null) => {
     if (!user) {
-      showSalert("Please login to place an order", "warning");
+      showSalert("Login required", "warning");
       return;
     }
 
@@ -245,57 +268,43 @@ function App() {
         createdAt: new Date().toISOString(),
       };
 
-      const docRef = await addDoc(collection(db, "orders"), orderData);
-      console.log("Order placed:", docRef.id);
+      await addDoc(collection(db, "orders"), orderData);
       clearCart();
-      return docRef.id;
+
     } catch (err) {
-      console.error("Order Error:", err);
-      throw err;
+      console.error(err);
     }
   };
 
   /* LOAD ORDERS */
-
   useEffect(() => {
-
     const unsub = onSnapshot(collection(db, "orders"), (snap) => {
-
-      setOrders(
-        snap.docs.map((d) => ({
-          id: d.id,
-          ...d.data(),
-        }))
-      );
-
+      setOrders(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     });
-
     return () => unsub();
-
   }, []);
 
-  /* ================= LANDING PAGE CLICK GUARD ================= */
+  const userOrders = orders.filter(o => o.userId === user?.uid);
 
+  /* LANDING CLICK */
   const handleLandingClick = (e) => {
-    // allow clicks to the admin-link if present
-    if (e.target.closest(".admin-link")) return;
+    // Ignore clicks on buttons, links, inputs (important)
+    if (
+      e.target.closest("button") ||
+      e.target.closest("a") ||
+      e.target.closest("input") ||
+      e.target.closest(".admin-link")
+    ) {
+      return;
+    }
 
     if (!user) {
-      navigate("/login");
+      navigate("/");
     }
   };
 
-  /* ================= USER ORDERS ================= */
-
-  const userOrders = orders.filter(
-    (o) => o.userId === user?.uid
-  );
-
-  /* ================= UI ================= */
-
   return (
     <>
-
       {showStandardNav && (
         <Nav
           cartItems={cartItems}
@@ -312,136 +321,83 @@ function App() {
           path="/"
           element={
             <PageLoader>
-
-              <div onClick={handleLandingClick}>
+              <div >
                 <ImageSlider />
                 <Categories />
                 <Offer />
-                <SellerMenu addToCart={addToCart} />
+                <SellerMenu products={products} addToCart={addToCart} cartItems={cartItems} />
                 <GifExample />
-                {/* <Announcement /> */}
                 <AiSlider />
                 <About />
                 <MiniCategories />
                 <Footer />
               </div>
-
             </PageLoader>
           }
         />
 
-        <Route
-          path="/login"
-          element={
-            <PageLoader>
-              <Login setUser={setUser} />
-            </PageLoader>
-          }
-        />
+        <Route path="/login" element={<PageLoader><Login setUser={setUser} /></PageLoader>} />
+        <Route path="/signup" element={<PageLoader><Signup setUser={setUser} /></PageLoader>} />
 
-        <Route
-          path="/signup"
-          element={
-            <PageLoader>
-              <Signup setUser={setUser} />
-            </PageLoader>
-          }
-        />
+        <Route path="/menu" element={<PageLoader><Menu products={products} addToCart={addToCart} cartItems={cartItems} /></PageLoader>} />
+        <Route path="/aichat" element={<PageLoader><AIChatPage /></PageLoader>} />
+        <Route path="/food" element={<PageLoader><FoodGallery1 products={products} addToCart={addToCart} cartItems={cartItems} /></PageLoader>} />
+        <Route path="/all-menu" element={<PageLoader><CategoryMenu products={products} addToCart={addToCart} /></PageLoader>} />
+        <Route path="/search" element={<PageLoader><SearchPage products={products} addToCart={addToCart} cartItems={cartItems} /></PageLoader>} />
 
-        <Route
-          path="/menu"
-          element={
-            <PageLoader>
-              <Menu addToCart={addToCart} />
-            </PageLoader>
-          }
-        />
-        <Route
-          path="/aichat"
-          element={
-            <PageLoader>
-              <AIChatPage />
-            </PageLoader>
-          }
-        />
-
-        <Route
-          path="/food"
-          element={
-            <PageLoader>
-              <FoodGallery1 addToCart={addToCart} />
-            </PageLoader>
-          }
-        />
-        <Route
-          path="/all-menu"
-          element={
-            <PageLoader>
-              <CategoryMenu addToCart={addToCart} />
-            </PageLoader>
-          }
-        />
-        <Route
-          path="/search"
-          element={
-            <PageLoader>
-              <SearchPage addToCart={addToCart} />
-            </PageLoader>
-          }
-        />
-
+        {/* PROTECTED */}
         <Route
           path="/cart"
           element={
-            <PageLoader>
-              <Cart
-                cartItems={cartItems}
-                removeFromCart={removeFromCart}
-                updateQty={updateQty}
-                placeOrder={placeOrder}
-              />
-            </PageLoader>
+            <ProtectedRoute user={user}>
+              <PageLoader>
+                <Cart
+                  cartItems={cartItems}
+                  removeFromCart={removeFromCart}
+                  updateQty={updateQty}
+                  placeOrder={placeOrder}
+                />
+              </PageLoader>
+            </ProtectedRoute>
           }
         />
 
         <Route
           path="/tracking"
           element={
-            <PageLoader>
-              <OrderTracking orders={userOrders} />
-            </PageLoader>
+            <ProtectedRoute user={user}>
+              <PageLoader>
+                <OrderTracking orders={userOrders} />
+              </PageLoader>
+            </ProtectedRoute>
           }
         />
 
         <Route
           path="/user"
           element={
-            <PageLoader>
-              <UserPage 
-                user={user} 
-                setUser={setUser} 
-                orders={userOrders} 
-                cartItems={cartItems}
-              />
-            </PageLoader>
+            <ProtectedRoute user={user}>
+              <PageLoader>
+                <UserPage
+                  user={user}
+                  setUser={setUser}
+                  orders={userOrders}
+                  cartItems={cartItems}
+                />
+              </PageLoader>
+            </ProtectedRoute>
           }
         />
-
 
         <Route path="*" element={<Navigate to="/" replace />} />
 
       </Routes>
-
     </>
   );
 }
 
-import ScrollToTop from "./components/ScrollToTop";
-
-/* ================= ROUTER WRAPPER ================= */
-
+/* WRAPPER */
 export default function AppWrapper() {
-
   return (
     <Router>
       <SalertProvider>
@@ -450,5 +406,4 @@ export default function AppWrapper() {
       </SalertProvider>
     </Router>
   );
-
 }

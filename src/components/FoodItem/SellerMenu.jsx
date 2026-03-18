@@ -23,7 +23,7 @@ const CIRCULAR_CATS = [
   { id: "snacks", name: "Snacks", icon: "🍿" },
 ];
 
-function SellerMenu({ addToCart, cartItems = [] }) {
+function SellerMenu({ products: productsProp, addToCart, cartItems = [] }) {
   const [grouped, setGrouped] = useState({});
   const [loading, setLoading] = useState(true);
   const [openItem, setOpenItem] = useState(null);
@@ -32,6 +32,20 @@ function SellerMenu({ addToCart, cartItems = [] }) {
   const location = useLocation();
 
   useEffect(() => {
+    if (productsProp && productsProp.length > 0) {
+      let data = [...productsProp];
+      data = data.filter((i) => i.isActive !== false);
+
+      const sel = selectedCat.toLowerCase();
+      if (sel !== "all") {
+        data = data.filter((i) => i.category?.toLowerCase() === sel);
+      }
+
+      setGrouped(groupBySeller(data));
+      setLoading(false);
+      return;
+    }
+
     const unsub = onSnapshot(collection(db, "products"), (snap) => {
       let data = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       data = data.filter((i) => i.isActive !== false);
@@ -45,7 +59,7 @@ function SellerMenu({ addToCart, cartItems = [] }) {
       setLoading(false);
     });
     return () => unsub();
-  }, [selectedCat]);
+  }, [selectedCat, productsProp]);
 
   const isHomePage = location.pathname === "/";
 
@@ -62,7 +76,7 @@ function SellerMenu({ addToCart, cartItems = [] }) {
               </div>
               <Link to="/cart" className="mp-cart-trigger">
                 <FiShoppingCart />
-                <span className="mp-cart-badge">{cartItems.length}</span>
+                <span className="mp-cart-badge">{cartItems.reduce((acc, i) => acc + (i.qty || 1), 0)}</span>
               </Link>
             </div>
             

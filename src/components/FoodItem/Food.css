@@ -88,7 +88,7 @@
 
 @media (max-width: 768px) {
   .fm-visual {
-    min-height: 300px;
+    min-height: 280px;
   }
 }
 
@@ -133,12 +133,12 @@
 
 @media (max-width: 768px) {
   .fm-content {
-    padding: 30px 24px;
+    padding: 15px 18px;
   }
 }
 
 .fm-header {
-  margin-bottom: 24px;
+  margin-bottom: 12px;
 }
 
 .fm-seller-badge {
@@ -154,10 +154,10 @@
 }
 
 .fm-title {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 800;
   color: var(--bg-dark);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   line-height: 1.1;
 }
 
@@ -174,22 +174,23 @@
 
 .fm-description {
   color: #64748b;
-  font-size: 0.9rem;
-  line-height: 1.5;
-  margin-bottom: 20px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin-bottom: 15px;
 }
 
 .fm-pricing-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 25px;
+  margin-bottom: 15px;
 }
 
 .fm-current-price {
   font-size: 1.5rem;
   font-weight: 900;
   background: linear-gradient(135deg, var(--primary), var(--secondary));
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -241,7 +242,7 @@
 }
 
 .fm-stock-indicator {
-  margin-bottom: 35px;
+  margin-bottom: 15px;
 }
 
 .fm-stock-bar {
@@ -301,33 +302,36 @@
    ================================================================ */
 
 .mp-seller-title {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 16px;
-  font-size: 1.8rem !important;
+  gap: 8px;
+  font-size: 1.1rem !important;
   font-weight: 800 !important;
-  background: linear-gradient(135deg, var(--mp-primary-dark), var(--mp-primary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 25px !important;
-  letter-spacing: -0.5px;
+  background: white;
+  padding: 6px 16px;
+  border-radius: 100px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  color: var(--mp-primary-dark);
+  margin-bottom: 0px !important;
+  letter-spacing: -0.2px;
 }
 
 .mp-seller-icon {
-  width: 50px;
-  height: 50px;
+  width: 35px;
+  height: 35px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: white;
-  border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-  font-size: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.06);
+  font-size: 1.1rem;
   border: 1px solid #f1f5f9;
 }
 
 .mp-seller-section {
-  padding: 30px 0;
+  padding: 4px 0;
   border-bottom: 1px solid #f1f5f9;
 }
 

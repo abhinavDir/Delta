@@ -15,7 +15,7 @@ import {
   FoodModal 
 } from "./Food";
 
-function SearchPage({ addToCart, cartItems = [] }) {
+function SearchPage({ products: productsProp, addToCart, cartItems = [] }) {
   const [queryText, setQueryText] = useState("");
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,6 +23,12 @@ function SearchPage({ addToCart, cartItems = [] }) {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (productsProp && productsProp.length > 0) {
+      setProducts(productsProp);
+      setLoading(false);
+      return;
+    }
+
     const q = query(collection(db, "products"), where("isActive", "==", true));
     const unsub = onSnapshot(q, (snap) => {
       const data = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
@@ -30,7 +36,7 @@ function SearchPage({ addToCart, cartItems = [] }) {
       setLoading(false);
     });
     return () => unsub();
-  }, []);
+  }, [productsProp]);
 
   const normalizedQuery = queryText.toLowerCase().trim();
   const filteredProducts = normalizedQuery
@@ -62,7 +68,7 @@ function SearchPage({ addToCart, cartItems = [] }) {
             </div>
             <Link to="/cart" className="mp-cart-trigger">
               <FiShoppingCart />
-              <span className="mp-cart-badge">{cartItems.length}</span>
+              <span className="mp-cart-badge">{cartItems.reduce((acc, i) => acc + (i.qty || 1), 0)}</span>
             </Link>
           </div>
           

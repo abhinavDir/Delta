@@ -302,7 +302,7 @@ function Cart({ cartItems, removeFromCart, updateQty, placeOrder }) {
                       ₹{(item.discountedPrice || item.price) * (item.qty || 1)}
                     </span>
 
-                    <div style={{ fontSize: '0.7rem', color: Number(item.quantity) < 5 ? '#ff4d4d' : '#888', marginTop: '4px', fontWeight: 600 }}>
+                    <div className="item-stock-status" style={{ color: Number(item.quantity) < 5 ? '#ef4444' : '#94a3b8' }}>
                       Stock: {item.quantity} available
                     </div>
 

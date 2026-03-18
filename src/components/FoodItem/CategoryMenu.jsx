@@ -1,32 +1,38 @@
 import React, { useState, useEffect } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase";
-import { 
-  groupByCategory, 
-  CategoryRow, 
-  FoodModal 
+import {
+  groupByCategory,
+  CategoryRow,
+  FoodModal
 } from "./Food";
 import SkeletonLoader from "../Loader/SkeletonLoader";
 import "./Food.css";
 
-const CategoryMenu = ({ addToCart }) => {
+const CategoryMenu = ({ products: productsProp, addToCart }) => {
   const [grouped, setGrouped] = useState({});
   const [loading, setLoading] = useState(true);
   const [openItem, setOpenItem] = useState(null);
 
   useEffect(() => {
+    if (productsProp && productsProp.length > 0) {
+      let data = [...productsProp];
+      data = data.filter((i) => i.isActive !== false);
+      setGrouped(groupByCategory(data));
+      setLoading(false);
+      return;
+    }
+
     const unsub = onSnapshot(collection(db, "products"), (snap) => {
       let data = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      
-      // Filter out inactive products
+
       data = data.filter((i) => i.isActive !== false);
 
-      // Group by Category across all admins
       setGrouped(groupByCategory(data));
       setLoading(false);
     });
     return () => unsub();
-  }, []);
+  }, [productsProp]);
 
   return (
     <div className="marketplace-page">
